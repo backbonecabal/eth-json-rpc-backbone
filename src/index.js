@@ -1,6 +1,9 @@
 const createAsyncMiddleware = require('json-rpc-engine/src/createAsyncMiddleware')
 const { ethErrors } = require('eth-rpc-errors')
-const fetch = require('node-fetch')
+// const fetch = require('node-fetch')
+const fetch = require('cross-fetch')
+const postMethods = require('./postMethods')
+const createAsyncMiddleware = require('json-rpc-engine/src/createAsyncMiddleware')
 
 const RETRIABLE_ERRORS = [
   // ignore server overload errors
@@ -12,10 +15,10 @@ const RETRIABLE_ERRORS = [
   'SyntaxError',
 ]
 
-module.exports = createInfuraMiddleware
+module.exports = createManifoldMiddleware
 module.exports.fetchConfigFromReq = fetchConfigFromReq
 
-function createInfuraMiddleware (opts = {}) {
+function createManifoldMiddleware (opts = {}) {
   const network = opts.network || 'mainnet'
   const maxAttempts = opts.maxAttempts || 5
   const { source, projectId, headers = {} } = opts
@@ -49,7 +52,7 @@ function createInfuraMiddleware (opts = {}) {
         // if no more attempts remaining, throw an error
         const remainingAttempts = maxAttempts - attempt
         if (!remainingAttempts) {
-          const errMsg = `InfuraProvider - cannot complete request. All retries exhausted.\nOriginal Error:\n${err.toString()}\n\n`
+          const errMsg = `ManifoldProvider - cannot complete request. All retries exhausted.\nOriginal Error:\n${err.toString()}\n\n`
           const retriesExhaustedErr = new Error(errMsg)
           throw retriesExhaustedErr
         }
@@ -108,6 +111,13 @@ async function performFetch (network, projectId, extraHeaders, req, res, source)
   res.error = data.error
 }
 
+/** 
+* RPC Connection Entrypoint 
+* @summary This configures Web3 Providers to access the Backbone Cabal Network 
+* @param {fetchConfigFromReq} fetchRPC - 
+* @return {Content-Type} extraHeaders - [Manifold-Source]
+*/
+
 function fetchConfigFromReq ({ network, projectId, extraHeaders, req, source }) {
   const requestOrigin = req.origin || 'internal'
   const headers = Object.assign({}, extraHeaders, {
@@ -116,11 +126,11 @@ function fetchConfigFromReq ({ network, projectId, extraHeaders, req, source }) 
   })
 
   if (source) {
-    headers['Infura-Source'] = `${source}/${requestOrigin}`
+    headers['Manifold-Source'] = `${source}/${requestOrigin}`
   }
 
   return {
-    fetchUrl: `https://${network}.infura.io/v3/${projectId}`,
+    fetchUrl: `https://${network}.backbonecabal.com/v3/${projectId}`,
     fetchParams: {
       method: 'POST',
       headers,
