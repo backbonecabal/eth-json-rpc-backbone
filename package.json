@@ -1,6 +1,6 @@
 {
-  "name": "eth-json-rpc-infura",
-  "version": "5.1.0",
+  "name": "eth-json-rpc-backbone",
+  "version": "0.1.0",
   "main": "src/index.js",
   "directories": {
     "test": "test"
@@ -27,11 +27,11 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MetaMask/eth-json-rpc-infura.git"
+    "url": "git+https://github.com/backbonecabal/eth-json-rpc-backbone.git"
   },
   "bugs": {
-    "url": "https://github.com/MetaMask/eth-json-rpc-infura/issues"
+    "url": "https://github.com/backbonecabal/eth-json-rpc-backbone/issues"
   },
-  "homepage": "https://github.com/MetaMask/eth-json-rpc-infura#readme",
-  "description": "json-rpc-engine middleware for Infura's endpoints"
+  "homepage": "https://github.com/backbonecabal/eth-json-rpc-backbone#readme",
+  "description": "json-rpc-engine middleware for Backbone Cabal's endpoints"
 }
