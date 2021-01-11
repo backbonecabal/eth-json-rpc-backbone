@@ -1,10 +1,7 @@
 module.exports = {
   root: true,
 
-  extends: [
-    '@metamask/eslint-config',
-    '@metamask/eslint-config/config/nodejs',
-  ],
+  extends: ["@metamask/eslint-config", "@metamask/eslint-config/config/nodejs"],
 
   parserOptions: {
     ecmaVersion: 2017,
@@ -14,12 +11,12 @@ module.exports = {
     },
   },
 
-  overrides: [{
-    files: [
-      '.eslintrc.js',
-    ],
-    parserOptions: {
-      sourceType: 'script',
+  overrides: [
+    {
+      files: [".eslintrc.js"],
+      parserOptions: {
+        sourceType: "script",
+      },
     },
-  }],
-}
+  ],
+};
