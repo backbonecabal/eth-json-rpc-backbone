@@ -10,7 +10,7 @@
   ],
   "dependencies": {
     "eth-json-rpc-middleware": "^6.0.0",
-    "eth-rpc-errors": "^3.0.0",
+    "eth-rpc-errors": "^4.0.2",
     "json-rpc-engine": "^5.3.0",
     "node-fetch": "^2.6.0"
   },
