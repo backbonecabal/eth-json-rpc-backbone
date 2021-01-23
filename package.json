@@ -18,7 +18,7 @@
     "@metamask/eslint-config": "^3.0.0",
     "eslint": "^7.18.0",
     "eslint-plugin-import": "^2.20.1",
-    "tape": "^4.8.0"
+    "tape": "^5.1.1"
   },
   "scripts": {
     "lint": "eslint --ext .js .",
