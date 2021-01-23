@@ -1,6 +1,6 @@
 {
   "name": "eth-json-rpc-backbone",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "src/index.js",
   "directories": {
     "test": "test"
@@ -10,8 +10,8 @@
   ],
   "dependencies": {
     "eth-json-rpc-middleware": "^6.0.0",
+    "json-rpc-engine": "^6.1.0",
     "eth-rpc-errors": "^4.0.2",
-    "json-rpc-engine": "^5.3.0",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
