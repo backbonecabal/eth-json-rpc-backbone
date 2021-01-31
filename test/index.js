@@ -1,7 +1,7 @@
 const test = require('tape')
-const createInfuraMiddleware = require('../src')
+const createCabalMiddleware = require('../src')
 
-const { fetchConfigFromReq } = createInfuraMiddleware
+const { fetchConfigFromReq } = createCabalMiddleware
 
 test('fetchConfigFromReq - basic', (t) => {
 
@@ -21,7 +21,7 @@ test('fetchConfigFromReq - basic', (t) => {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Infura-Source': 'eth-json-rpc-infura/internal',
+      'Cabal-Source': 'eth-json-rpc-infura/internal',
     },
     body: '{"id":1,"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["0x482103",true]}',
   })
@@ -72,7 +72,7 @@ test('fetchConfigFromReq - basic', (t) => {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Infura-Source': 'eth-json-rpc-infura/internal',
+      'Cabal-Source': 'eth-json-rpc-infura/internal',
     },
     body: '{"id":1,"jsonrpc":"2.0","method":"eth_sendRawTransaction","params":["0x0102030405060708090a0b0c0d0e0f"]}',
   })
@@ -117,7 +117,7 @@ test('fetchConfigFromReq - source specified for request origin in header', (t) =
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Infura-Source': 'eth-json-rpc-infura/happydapp.eth',
+      'Cabal-Source': 'eth-json-rpc-infura/happydapp.eth',
     },
     body: fetchParams.body,
   })
@@ -153,21 +153,21 @@ test('fetchConfigFromReq - extraHeaders specified', (t) => {
 
 })
 
-test('createInfuraMiddleware throws with an invalid projectId', (t) => {
+test('createCabalMiddleware throws with an invalid projectId', (t) => {
 
-  t.throws(() => createInfuraMiddleware({ projectId: 42 }), /Invalid value for 'projectId'/u)
-  t.throws(() => createInfuraMiddleware({ projectId: null }), /Invalid value for 'projectId'/u)
-  t.throws(() => createInfuraMiddleware({ projectId: undefined }), /Invalid value for 'projectId'/u)
-  t.throws(() => createInfuraMiddleware({ projectId: '' }), /Invalid value for 'projectId'/u)
+  t.throws(() => createCabalMiddleware({ projectId: 42 }), /Invalid value for 'projectId'/u)
+  t.throws(() => createCabalMiddleware({ projectId: null }), /Invalid value for 'projectId'/u)
+  t.throws(() => createCabalMiddleware({ projectId: undefined }), /Invalid value for 'projectId'/u)
+  t.throws(() => createCabalMiddleware({ projectId: '' }), /Invalid value for 'projectId'/u)
   t.end()
 
 })
 
-test('createInfuraMiddleware throws with invalid headers', (t) => {
+test('createCabalMiddleware throws with invalid headers', (t) => {
 
-  t.throws(() => createInfuraMiddleware({ projectId: 'foo', headers: null }), /Invalid value for 'headers'/u)
-  t.throws(() => createInfuraMiddleware({ projectId: 'foo', headers: 42 }), /Invalid value for 'headers'/u)
-  t.throws(() => createInfuraMiddleware({ projectId: 'foo', headers: '' }), /Invalid value for 'headers'/u)
+  t.throws(() => createCabalMiddleware({ projectId: 'foo', headers: null }), /Invalid value for 'headers'/u)
+  t.throws(() => createCabalMiddleware({ projectId: 'foo', headers: 42 }), /Invalid value for 'headers'/u)
+  t.throws(() => createCabalMiddleware({ projectId: 'foo', headers: '' }), /Invalid value for 'headers'/u)
   t.end()
 
 })

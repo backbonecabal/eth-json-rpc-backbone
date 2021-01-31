@@ -33,5 +33,5 @@
     "url": "https://github.com/MetaMask/eth-json-rpc-infura/issues"
   },
   "homepage": "https://github.com/MetaMask/eth-json-rpc-infura#readme",
-  "description": "json-rpc-engine middleware for Infura's endpoints"
+  "description": "json-rpc-engine middleware for Cabal's endpoints"
 }

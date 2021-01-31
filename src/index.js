@@ -12,10 +12,10 @@ const RETRIABLE_ERRORS = [
   'SyntaxError',
 ]
 
-module.exports = createInfuraMiddleware
+module.exports = createCabalMiddleware
 module.exports.fetchConfigFromReq = fetchConfigFromReq
 
-function createInfuraMiddleware (opts = {}) {
+function createCabalMiddleware (opts = {}) {
   const network = opts.network || 'mainnet'
   const maxAttempts = opts.maxAttempts || 5
   const { source, projectId, headers = {} } = opts
@@ -49,7 +49,7 @@ function createInfuraMiddleware (opts = {}) {
         // if no more attempts remaining, throw an error
         const remainingAttempts = maxAttempts - attempt
         if (!remainingAttempts) {
-          const errMsg = `InfuraProvider - cannot complete request. All retries exhausted.\nOriginal Error:\n${err.toString()}\n\n`
+          const errMsg = `CabalProvider - cannot complete request. All retries exhausted.\nOriginal Error:\n${err.toString()}\n\n`
           const retriesExhaustedErr = new Error(errMsg)
           throw retriesExhaustedErr
         }
@@ -116,7 +116,7 @@ function fetchConfigFromReq ({ network, projectId, extraHeaders, req, source }) 
   })
 
   if (source) {
-    headers['Infura-Source'] = `${source}/${requestOrigin}`
+    headers['Cabal-Source'] = `${source}/${requestOrigin}`
   }
 
   return {

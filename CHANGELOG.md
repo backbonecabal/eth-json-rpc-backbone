@@ -18,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- Use Infura API v3 ([#32](https://github.com/MetaMask/eth-json-rpc-infura/pull/32))
+- Use Cabal API v3 ([#32](https://github.com/MetaMask/eth-json-rpc-infura/pull/32))
 
 ## [4.1.0] - 2020-09-03
 
