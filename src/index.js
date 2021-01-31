@@ -1,5 +1,12 @@
+/**
+* @file Backbone Cabal Ethereum JSON-RPC v2 
+* @support Operations <ops@manifoldfinance.com>
+* @summay Middleware Component for Web3 Providers 
+*/
+
 const createAsyncMiddleware = require("json-rpc-engine/src/createAsyncMiddleware");
 const { ethErrors } = require("eth-rpc-errors");
+// TODO - Compare and benchmark any differences for node-fetch vs cross-fetch
 // const fetch = require('node-fetch')
 const fetch = require("cross-fetch");
 const postMethods = require("./postMethods");
@@ -15,15 +22,23 @@ const RETRIABLE_ERRORS = [
   "SyntaxError",
 ];
 
-module.exports = createManifoldMiddleware;
+
+module.exports = createCabalMiddleware;
 module.exports.fetchConfigFromReq = fetchConfigFromReq;
 
-function createManifoldMiddleware(opts = {}) {
+/** 
+* 
+* @summary createCabalMiddleware
+* @param {network} opts.network -  mainnet
+* @return {chainId} 1
+*/
+
+function createCabalMiddleware(opts = {}) {
   const network = opts.network || "mainnet";
   const maxAttempts = opts.maxAttempts || 5;
   const { source, projectId, headers = {} } = opts;
 
-  // validate options
+  // @note validate options
   if (!projectId || typeof projectId !== "string") {
     throw new Error(`Invalid value for 'projectId': "${projectId}"`);
   }
@@ -35,6 +50,7 @@ function createManifoldMiddleware(opts = {}) {
       `Invalid value for 'maxAttempts': "${maxAttempts}" (${typeof maxAttempts})`
     );
   }
+
 
   return createAsyncMiddleware(async (req, res) => {
     // retry MAX_ATTEMPTS times, if error matches filter
@@ -51,18 +67,18 @@ function createManifoldMiddleware(opts = {}) {
           // abort with error
           throw err;
         }
-        // if no more attempts remaining, throw an error
+        // @dev if no more attempts remaining, throw an error
         const remainingAttempts = maxAttempts - attempt;
         if (!remainingAttempts) {
-          const errMsg = `ManifoldProvider - cannot complete request. All retries exhausted.\nOriginal Error:\n${err.toString()}\n\n`;
+          const errMsg = `CabalProvider - cannot complete request. All retries exhausted.\nOriginal Error:\n${err.toString()}\n\n`;
           const retriesExhaustedErr = new Error(errMsg);
           throw retriesExhaustedErr;
         }
-        // otherwise, ignore error and retry again after timeout
+        // @dev otherwise, ignore error and retry again after timeout
         await timeout(1000);
       }
     }
-    // request was handled correctly, end
+    // @note request was handled correctly, end
   });
 }
 
@@ -92,9 +108,10 @@ async function performFetch(
     req,
     source,
   });
+  
   const response = await fetch(fetchUrl, fetchParams);
   const rawData = await response.text();
-  // handle errors
+  // @dev handle errors
   if (!response.ok) {
     switch (response.status) {
       case 405:
@@ -112,16 +129,16 @@ async function performFetch(
     }
   }
 
-  // special case for now
+  // @note special case for now
   if (req.method === "eth_getBlockByNumber" && rawData === "Not Found") {
     res.result = null;
     return;
   }
 
-  // parse JSON
+  // @dev parse JSON
   const data = JSON.parse(rawData);
 
-  // finally return result
+  // @dev finally return result
   res.result = data.result;
   res.error = data.error;
 }
@@ -130,7 +147,7 @@ async function performFetch(
  * RPC Connection Entrypoint
  * @summary This configures Web3 Providers to access the Backbone Cabal Network
  * @param {fetchConfigFromReq} fetchRPC -
- * @return {Content-Type} extraHeaders - [Manifold-Source]
+ * @return {Content-Type} extraHeaders - [Cabal-Source]
  */
 
 function fetchConfigFromReq({ network, projectId, extraHeaders, req, source }) {
@@ -141,8 +158,14 @@ function fetchConfigFromReq({ network, projectId, extraHeaders, req, source }) {
   });
 
   if (source) {
-    headers["Manifold-Source"] = `${source}/${requestOrigin}`;
+    headers["Cabal-Source"] = `${source}/${requestOrigin}`;
   }
+/**
+* RPC URL
+* @property {uri} fetchUrl - RPC Endpoint 
+* @property {network} [fetchUrl:uri] - The ChainId
+* @property {projectId} [fetchUrl:uri] - The ProjectId
+*/
 
   return {
     fetchUrl: `https://${network}.backbonecabal.com/v3/${projectId}`,
@@ -154,7 +177,7 @@ function fetchConfigFromReq({ network, projectId, extraHeaders, req, source }) {
   };
 }
 
-// strips out extra keys that could be rejected by strict nodes like parity
+// @dev strips out extra keys that could be rejected by strict nodes like parity
 function normalizeReq(req) {
   return {
     id: req.id,
@@ -163,6 +186,12 @@ function normalizeReq(req) {
     params: req.params,
   };
 }
+
+/** 
+* @summary Rate Limit Error Handling 
+* @param {integer} createRatelimitError - Returns RPC Error Code as defined by Open RPC 
+* @return {integer} returns `createInternalError(msg)`
+*/
 
 function createRatelimitError() {
   const msg = `Request is being rate limited.`;
