@@ -1,0 +1,28 @@
+# GitHub Nodejs CI
+name: nodejs
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: ["12.x", "14.x"]
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install, build, and test
+        run: |
+          npm install codecov -g
+          yarn install
+          yarn run test
+          yarn run coverage
+          codecov
+        env:
+          CI: true
